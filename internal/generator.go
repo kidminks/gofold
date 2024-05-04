@@ -37,8 +37,23 @@ func GenerateDefaultConfigFile(path string) error {
 		slog.Error("error in opening file")
 		return err
 	}
+	defer f.Close()
 	if err := model.WriteDefaultConfig(f); err != nil {
 		return err
+	}
+	return nil
+}
+
+func GenerateStructureUsingConfigFile(configFile string) error {
+	config, err := model.FetchConfig(configFile)
+	if err != nil {
+		return err
+	}
+	for _, f := range config.Folders {
+		GenerateFolder(f)
+	}
+	for _, f := range config.Files {
+		GenerateFile(f)
 	}
 	return nil
 }

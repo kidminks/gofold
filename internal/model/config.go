@@ -1,7 +1,9 @@
 package model
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
 	"log/slog"
 	"os"
 )
@@ -19,9 +21,9 @@ func WriteDefaultConfig(f *os.File) error {
 {
 	"folders": ["cmd/server", "internal/model", "internal/db", "config"],
 	"file": ["cmd/server/main.go", ".gitignore", "go.mod"],
-	"config": "config"
+	"config": "config",
 	"model": "internal/model",
-	"main": "/cmd/server/main.go",
+	"main": "/cmd/server/main.go"
 }
 	`
 	if _, err := fmt.Fprintln(f, configJson); err != nil {
@@ -36,6 +38,15 @@ func WriteDefaultConfig(f *os.File) error {
 	return nil
 }
 
-func FetchDefaultConfig() error {
-
+func FetchConfig(configFile string) (*Config, error) {
+	jsonFile, err := os.Open(configFile)
+	if err != nil {
+		slog.Error("error in opening file", "file", configFile)
+		return nil, err
+	}
+	defer jsonFile.Close()
+	byteValue, _ := io.ReadAll(jsonFile)
+	var result Config
+	json.Unmarshal([]byte(byteValue), &result)
+	return &result, nil
 }
