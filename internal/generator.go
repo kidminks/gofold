@@ -1,9 +1,10 @@
 package internal
 
 import (
-	"fmt"
 	"log/slog"
 	"os"
+
+	"github.com/kidminks/gofold/internal/model"
 )
 
 func GenerateFolder(path string) error {
@@ -36,23 +37,7 @@ func GenerateDefaultConfigFile(path string) error {
 		slog.Error("error in opening file")
 		return err
 	}
-
-	configJson := `
-{
-	"folders": ["cmd/server", "internal/model", "internal/db", "config"],
-	"file": ["cmd/server/main.go", ".gitignore", "go.mod"],
-	"config": "config"
-	"model": "internal/model",
-	"main": "/cmd/server/main.go",
-}
-	`
-	if _, err := fmt.Fprintln(f, configJson); err != nil {
-		slog.Error("error in writing default json to file", "error", err)
-		return err
-	}
-
-	if err := f.Close(); err != nil {
-		slog.Error("error in closing file", "error", err)
+	if err := model.WriteDefaultConfig(f); err != nil {
 		return err
 	}
 	return nil
