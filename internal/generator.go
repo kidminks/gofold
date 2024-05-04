@@ -44,15 +44,24 @@ func GenerateDefaultConfigFile(path string) error {
 	return nil
 }
 
-func GenerateStructureUsingConfigFile(configFile string) error {
+func GenerateStructureUsingConfigFile(path, configFile string, addPath bool) error {
+	if addPath {
+		configFile = path + "/" + configFile
+	}
 	config, err := model.FetchConfig(configFile)
 	if err != nil {
 		return err
 	}
 	for _, f := range config.Folders {
+		if addPath {
+			f = path + "/" + f
+		}
 		GenerateFolder(f)
 	}
 	for _, f := range config.Files {
+		if addPath {
+			f = path + "/" + f
+		}
 		GenerateFile(f)
 	}
 	return nil

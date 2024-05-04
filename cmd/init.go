@@ -4,8 +4,6 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"os/exec"
-
 	"github.com/kidminks/gofold/internal"
 	"github.com/spf13/cobra"
 )
@@ -35,11 +33,10 @@ gofold init fastDev`,
 		path := args[0]
 		configFile, _ := cmd.Flags().GetString("config")
 		if configFile != "" {
-			internal.GenerateStructureUsingConfigFile(configFile)
+			internal.GenerateStructureUsingConfigFile(path, configFile, false)
 		} else {
 			internal.GenerateDefaultConfigFile(path)
-			exec.Command("cd " + path)
-			exec.Command("gofold init " + path + "--config gofold_config.json")
+			internal.GenerateStructureUsingConfigFile(path, "/gofold_config.json", true)
 		}
 	},
 }
