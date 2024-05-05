@@ -36,7 +36,7 @@ gofold init fastDev`,
 			internal.GenerateStructureUsingConfigFile(path, configFile, false)
 		} else {
 			internal.GenerateDefaultConfigFile(path)
-			internal.GenerateStructureUsingConfigFile(path, "/gofold_config.json", true)
+			internal.GenerateStructureUsingConfigFile(path, internal.DefaultConfigFile, true)
 		}
 	},
 }

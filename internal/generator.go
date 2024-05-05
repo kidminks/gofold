@@ -29,10 +29,10 @@ func GenerateDefaultConfigFile(path string) error {
 	if err := GenerateFolder(path); err != nil {
 		return err
 	}
-	if err := GenerateFile(path + "/gofold_config.json"); err != nil {
+	if err := GenerateFile(path + DefaultConfigFile); err != nil {
 		return err
 	}
-	f, err := os.OpenFile(path+"/gofold_config.json", os.O_APPEND|os.O_WRONLY, 0644)
+	f, err := os.OpenFile(path+DefaultConfigFile, os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		slog.Error("error in opening file")
 		return err
