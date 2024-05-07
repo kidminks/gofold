@@ -3,6 +3,7 @@ package internal
 import (
 	"log/slog"
 	"os"
+	"strings"
 
 	"github.com/kidminks/gofold/internal/model"
 )
@@ -64,5 +65,16 @@ func GenerateStructureUsingConfigFile(path, configFile string, addPath bool) err
 		}
 		GenerateFile(f)
 	}
+	return nil
+}
+
+func GenerateModel(name, configFile string, fields []string) error {
+	config, err := model.FetchConfig(configFile)
+	if err != nil {
+		return err
+	}
+	tp := strings.Split(config.Model, "/")
+	p := tp[len(tp)-1]
+	model.BuildModel(p, name, fields)
 	return nil
 }
