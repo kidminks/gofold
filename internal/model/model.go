@@ -3,6 +3,8 @@ package model
 import (
 	"fmt"
 	"strings"
+
+	"github.com/kidminks/gofold/template"
 )
 
 type Field struct {
@@ -19,6 +21,8 @@ type Model struct {
 func BuildModel(packageName, name string, fields []string) {
 	ff := buildFieldStructure(fields)
 	fmt.Println(ff)
+	s := template.GetModelTemplate()
+	fmt.Println(s)
 }
 
 func buildFieldStructure(fields []string) []Field {
