@@ -8,7 +8,7 @@ func GetModelTemplate() string {
 	)
 
 	type {model_name} struct {
-		Id   int
+		Id  int
 		{fields}
 	}
 	
@@ -35,7 +35,7 @@ func GetModelTemplate() string {
 	
 	func UpdateUser(db *sql.DB, id int, {model_name_camel} *{model_name}) error {
 		query := {update_query}
-		_, err := db.Exec(query, {insert_exec}, id)
+		_, err := db.Exec(query, {update_exec}, id)
 		if err != nil {
 			return err
 		}

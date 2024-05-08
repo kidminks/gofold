@@ -73,7 +73,7 @@ func buildInsertQuery(name string, fields []Field) (string, string) {
 }
 
 func buildUpdateQuery(name string, fields []Field) (string, string) {
-	q := "UPDATE {model_name} SET ({field}) WHERE id = ?"
+	q := "UPDATE {model_name} SET {field} WHERE id = ?"
 	iField, iMarks := "id,", ""
 	for _, f := range fields {
 		iField += f.Key + ","
