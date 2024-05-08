@@ -3,13 +3,18 @@ package template
 func GetModelTemplate() string {
 	return `package {package}
 
+	import (
+		"database/sql"
+	)
+
 	type {model_name} struct {
+		Id   int
 		{fields}
 	}
 	
 	func (m *{model_name}) Create(db *sql.DB, {model_name_camel} *{model_name}) error {
 		query := {insert_query}
-		_, err := {insert_exec}
+		_, err := db.Exec(query, {insert_exec})
 		if err != nil {
 			return err
 		}
@@ -30,7 +35,7 @@ func GetModelTemplate() string {
 	
 	func UpdateUser(db *sql.DB, id int, {model_name_camel} *{model_name}) error {
 		query := {update_query}
-		_, err := {update_exec}
+		_, err := db.Exec(query, {insert_exec}, id)
 		if err != nil {
 			return err
 		}
@@ -38,8 +43,8 @@ func GetModelTemplate() string {
 	}
 	
 	func DeleteUser(db *sql.DB, id int) error {
-		query := {delete_query}
-		_, err := {delete_exec}
+		query := "DELETE FROM {model_name} WHERE id = ?"
+    	_, err := db.Exec(query, id)
 		if err != nil {
 			return err
 		}
