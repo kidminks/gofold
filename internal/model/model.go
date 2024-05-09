@@ -29,7 +29,7 @@ func GenerateModelFile(name string, config *Config, fields []string) error {
 	tp := strings.Split(config.Model, "/")
 	p := tp[len(tp)-1]
 	s := buildModel(p, name, fields)
-	f, err := os.OpenFile(config.Model, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.OpenFile(config.Model+"/"+strings.ToLower(name)+".go", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	defer f.Close()
 	if err != nil {
 		slog.Error("error in opening file", "error", err)
@@ -60,6 +60,8 @@ func buildModel(packageName, name string, fields []string) string {
 	uq, uField := buildUpdateQuery(name, ff)
 	s = strings.ReplaceAll(s, "{update_query}", uq)
 	s = strings.ReplaceAll(s, "{update_exec}", uField)
+	rq := rowScanQuery(name, ff)
+	s = strings.ReplaceAll(s, "{fetch_row_scan}", rq)
 	return s
 }
 
@@ -78,31 +80,41 @@ func buildFieldStructure(fields []string) ([]Field, string) {
 }
 
 func buildInsertQuery(name string, fields []Field) (string, string) {
-	q := "INSERT INTO {model_name} ({field}) VALUES ({marks})"
-	iField, iMarks := "", ""
+	q := `"INSERT INTO {model_name} ({field}) VALUES ({marks})"`
+	iField, iMarks, iExec := "", "", ""
 	for _, f := range fields {
 		iField += f.Key + ","
 		iMarks += "?,"
+		iExec += strings.ToLower(name) + "." + f.Key + ","
 	}
 	iField = iField[:len(iField)-1]
+	iExec = iExec[:len(iExec)-1]
 	iMarks = iMarks[:len(iMarks)-1]
 	q = strings.ReplaceAll(q, "{model_name}", name)
 	q = strings.ReplaceAll(q, "{field}", iField)
 	q = strings.ReplaceAll(q, "{marks}", iMarks)
-	return q, iField
+	return q, iExec
 }
 
 func buildUpdateQuery(name string, fields []Field) (string, string) {
-	q := "UPDATE {model_name} SET {field} WHERE id = ?"
-	iField, iMarks := "id,", ""
+	q := `"UPDATE {model_name} SET {field} WHERE id = ?"`
+	iMarks, uExec := "", ""
 	for _, f := range fields {
-		iField += f.Key + ","
 		iMarks += f.Key + " = ?,"
+		uExec += strings.ToLower(name) + "." + f.Key + ","
 	}
-	iField = iField[:len(iField)-1]
+	uExec = uExec[:len(uExec)-1]
 	iMarks = iMarks[:len(iMarks)-1]
 	q = strings.ReplaceAll(q, "{model_name}", name)
-	q = strings.ReplaceAll(q, "{name}", name)
 	q = strings.ReplaceAll(q, "{field}", iMarks)
-	return q, iField
+	return q, uExec
+}
+
+func rowScanQuery(name string, fields []Field) string {
+	rScan := ""
+	for _, f := range fields {
+		rScan += "&" + strings.ToLower(name) + "." + f.Key + ","
+	}
+	rScan = rScan[:len(rScan)-1]
+	return rScan
 }

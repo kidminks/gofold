@@ -26,7 +26,7 @@ func GetModelTemplate() string {
 		row := db.QueryRow(query, id)
 	
 		{model_name_camel} := &{model_name}{}
-		err := {fetch_row_scan}
+		err := row.Scan({fetch_row_scan})
 		if err != nil {
 			return nil, err
 		}
