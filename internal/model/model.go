@@ -29,7 +29,7 @@ func GenerateModelFile(name string, config *Config, fields []string) error {
 	tp := strings.Split(config.Model, "/")
 	p := tp[len(tp)-1]
 	s := buildModel(p, name, fields)
-	f, err := os.OpenFile("access.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.OpenFile(config.Model, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	defer f.Close()
 	if err != nil {
 		slog.Error("error in opening file", "error", err)

@@ -4,7 +4,6 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
 	"log/slog"
 	"os"
 
@@ -32,7 +31,6 @@ var modelCmd = &cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		configFile, _ := cmd.Flags().GetString("config")
-		fmt.Println(configFile)
 		if configFile == "" {
 			slog.Error("config file not specified")
 			os.Exit(1)
