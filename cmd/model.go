@@ -37,7 +37,10 @@ var modelCmd = &cobra.Command{
 			slog.Error("config file not specified")
 			os.Exit(1)
 		}
-		internal.GenerateModel(args[0], configFile, args[1:])
+		mErr := internal.GenerateModel(args[0], configFile, args[1:])
+		if mErr == nil {
+			os.Exit(1)
+		}
 	},
 }
 

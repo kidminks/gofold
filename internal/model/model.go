@@ -2,6 +2,8 @@ package model
 
 import (
 	"fmt"
+	"log/slog"
+	"os"
 	"strings"
 	"unicode"
 
@@ -23,7 +25,25 @@ type Query struct {
 	InsertQuery string
 }
 
-func BuildModel(packageName, name string, fields []string) {
+func GenerateModelFile(name string, config *Config, fields []string) error {
+	tp := strings.Split(config.Model, "/")
+	p := tp[len(tp)-1]
+	s := buildModel(p, name, fields)
+	f, err := os.OpenFile("access.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	defer f.Close()
+	if err != nil {
+		slog.Error("error in opening file", "error", err)
+		return err
+	}
+	_, fWriteError := f.WriteString(s)
+	if fWriteError != nil {
+		slog.Error("error in closing file", "error", fWriteError)
+		return fWriteError
+	}
+	return nil
+}
+
+func buildModel(packageName, name string, fields []string) string {
 	ff, fs := buildFieldStructure(fields)
 	fmt.Println(ff)
 	s := template.GetModelTemplate()
@@ -40,7 +60,7 @@ func BuildModel(packageName, name string, fields []string) {
 	uq, uField := buildUpdateQuery(name, ff)
 	s = strings.ReplaceAll(s, "{update_query}", uq)
 	s = strings.ReplaceAll(s, "{update_exec}", uField)
-	fmt.Println(s)
+	return s
 }
 
 func buildFieldStructure(fields []string) ([]Field, string) {

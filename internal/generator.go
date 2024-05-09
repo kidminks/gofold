@@ -3,7 +3,6 @@ package internal
 import (
 	"log/slog"
 	"os"
-	"strings"
 
 	"github.com/kidminks/gofold/internal/model"
 )
@@ -73,8 +72,9 @@ func GenerateModel(name, configFile string, fields []string) error {
 	if err != nil {
 		return err
 	}
-	tp := strings.Split(config.Model, "/")
-	p := tp[len(tp)-1]
-	model.BuildModel(p, name, fields)
+	mErr := model.GenerateModelFile(name, config, fields)
+	if mErr != nil {
+		return mErr
+	}
 	return nil
 }
