@@ -66,3 +66,15 @@ func GenerateStructureUsingConfigFile(path, configFile string, addPath bool) err
 	}
 	return nil
 }
+
+func GenerateModel(name, configFile string, fields []string) error {
+	config, err := model.FetchConfig(configFile)
+	if err != nil {
+		return err
+	}
+	mErr := model.GenerateModelFile(name, config, fields)
+	if mErr != nil {
+		return mErr
+	}
+	return nil
+}
