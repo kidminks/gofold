@@ -7,6 +7,7 @@ import (
 	"strings"
 	"unicode"
 
+	"github.com/iancoleman/strcase"
 	"github.com/kidminks/gofold/template"
 )
 
@@ -29,12 +30,13 @@ func GenerateModelFile(name string, config *Config, fields []string) error {
 	tp := strings.Split(config.Model, "/")
 	p := tp[len(tp)-1]
 	s := buildModel(p, name, fields)
-	f, err := os.OpenFile(config.Model+"/"+strings.ToLower(name)+".go", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	defer f.Close()
+	mFileName := config.Model + "/" + strings.ToLower(name) + ".go"
+	f, err := os.OpenFile(mFileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		slog.Error("error in opening file", "error", err)
 		return err
 	}
+	defer f.Close()
 	_, fWriteError := f.WriteString(s)
 	if fWriteError != nil {
 		slog.Error("error in closing file", "error", fWriteError)
@@ -71,10 +73,10 @@ func buildFieldStructure(fields []string) ([]Field, string) {
 	for _, f := range fields {
 		s := strings.Split(f, ":")
 		ff = append(ff, Field{
-			Key:  s[0],
+			Key:  strcase.ToCamel(s[0]),
 			Type: s[1],
 		})
-		fs += s[0] + " " + s[1] + "\n"
+		fs += strcase.ToCamel(s[0]) + " " + s[1] + "\n"
 	}
 	return ff, fs
 }
@@ -83,7 +85,7 @@ func buildInsertQuery(name string, fields []Field) (string, string) {
 	q := `"INSERT INTO {model_name} ({field}) VALUES ({marks})"`
 	iField, iMarks, iExec := "", "", ""
 	for _, f := range fields {
-		iField += f.Key + ","
+		iField += strcase.ToSnake(f.Key) + ","
 		iMarks += "?,"
 		iExec += strings.ToLower(name) + "." + f.Key + ","
 	}
@@ -100,7 +102,7 @@ func buildUpdateQuery(name string, fields []Field) (string, string) {
 	q := `"UPDATE {model_name} SET {field} WHERE id = ?"`
 	iMarks, uExec := "", ""
 	for _, f := range fields {
-		iMarks += f.Key + " = ?,"
+		iMarks += strcase.ToSnake(f.Key) + " = ?,"
 		uExec += strings.ToLower(name) + "." + f.Key + ","
 	}
 	uExec = uExec[:len(uExec)-1]
