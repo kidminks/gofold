@@ -23,6 +23,7 @@ func WriteDefaultConfig(f *os.File) error {
 	"file": ["cmd/server/main.go", ".gitignore", "go.mod"],
 	"config": "config",
 	"model": "internal/model",
+	"handler": "internal/handler"
 	"main": "/cmd/server/main.go"
 }
 	`
