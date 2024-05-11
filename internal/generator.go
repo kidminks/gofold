@@ -25,11 +25,14 @@ func GenerateFile(file string) error {
 	return nil
 }
 
-func GenerateDefaultConfigFile(path string) error {
+func GenerateDefaultConfigFile(path, module string) error {
 	if err := GenerateFolder(path); err != nil {
 		return err
 	}
 	if err := GenerateFile(path + DefaultConfigFile); err != nil {
+		return err
+	}
+	if err := GenerateFile(path + DefaultGoModFile); err != nil {
 		return err
 	}
 	f, err := os.OpenFile(path+DefaultConfigFile, os.O_APPEND|os.O_WRONLY, 0644)
@@ -38,7 +41,16 @@ func GenerateDefaultConfigFile(path string) error {
 		return err
 	}
 	defer f.Close()
-	if err := model.WriteDefaultConfig(f); err != nil {
+	if err := model.WriteDefaultConfig(module, f); err != nil {
+		return err
+	}
+	cf, err := os.OpenFile(path+DefaultGoModFile, os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		slog.Error("error in opening file")
+		return err
+	}
+	defer cf.Close()
+	if err := model.WriteGoMod(module, cf); err != nil {
 		return err
 	}
 	return nil
@@ -75,6 +87,18 @@ func GenerateModel(name, configFile string, fields []string) error {
 	mErr := model.GenerateModelFile(name, config, fields)
 	if mErr != nil {
 		return mErr
+	}
+	return nil
+}
+
+func GenerateHandler(name, configFile string) error {
+	config, err := model.FetchConfig(configFile)
+	if err != nil {
+		return err
+	}
+	hErr := model.GenerateHandlerFile(name, config)
+	if hErr != nil {
+		return hErr
 	}
 	return nil
 }
