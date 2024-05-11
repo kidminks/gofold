@@ -58,6 +58,9 @@ func GetHandlerTemplate() string {
 
 	import (
 		"database/sql"
+		"encoding/json"
+		"net/http"
+		"strconv"
 		{model_package_import}
 	)
 
