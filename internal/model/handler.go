@@ -44,7 +44,7 @@ func buildHandler(h *Handler) string {
 	s := template.GetHandlerTemplate()
 	s = strings.ReplaceAll(s, "{package}", h.PackageName)
 	s = strings.ReplaceAll(s, "{model_name}", h.Name)
-	nameCamel := strcase.ToCamel(h.Name)
+	nameCamel := strings.ToLower(strcase.ToCamel(h.Name))
 	s = strings.ReplaceAll(s, "{model_name_camel}", nameCamel)
 	s = strings.ReplaceAll(s, "{model_package}", h.ModelPackageName)
 	s = strings.ReplaceAll(s, "{model_package_import}", h.ModelPackageImport)

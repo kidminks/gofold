@@ -12,7 +12,7 @@ func GetModelTemplate() string {
 		{fields}
 	}
 	
-	func (m *{model_name}) Create{model_name}(db *sql.DB, {model_name_camel} *{model_name}) error {
+	func Create{model_name}(db *sql.DB, {model_name_camel} *{model_name}) error {
 		query := {insert_query}
 		_, err := db.Exec(query, {insert_exec})
 		if err != nil {
@@ -64,7 +64,7 @@ func GetHandlerTemplate() string {
 		
 		"github.com/gorilla/mux"
 
-		{model_package_import}
+		"{model_package_import}"
 	)
 
 	func Create{model_name}Handler(db *sql.DB, r *http.Request) error {
@@ -100,7 +100,7 @@ func GetHandlerTemplate() string {
 		{model_name_camel} := &{model_package}.{model_name}{}
 		json.NewDecoder(r.Body).Decode({model_name_camel})
 	
-		err := {model_package}.Update{model_name}(db, id, {model_name_camel})
+		err = {model_package}.Update{model_name}(db, id, {model_name_camel})
 		if err != nil {
 		 return err
 		}
@@ -108,12 +108,12 @@ func GetHandlerTemplate() string {
 		return nil
 	}
 	
-	func Delete{model_name}Handler(db *sql.Db, r *http.Request) error {
+	func Delete{model_name}Handler(db *sql.DB, r *http.Request) error {
 		vars := mux.Vars(r)
 		idStr := vars["id"]
 		{model_name_camel}Id, err := strconv.Atoi(idStr)
 	
-		err := {model_package}.Delete{model_name}(db, id)
+		err = {model_package}.Delete{model_name}(db, id)
 		if err != nil {
 		 return err
 		}
