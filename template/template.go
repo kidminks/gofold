@@ -61,6 +61,7 @@ func GetHandlerTemplate() string {
 		"encoding/json"
 		"net/http"
 		"strconv"
+		
 		{model_package_import}
 	)
 
