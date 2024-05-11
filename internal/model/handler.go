@@ -10,14 +10,21 @@ import (
 )
 
 type Handler struct {
-	PackageName string
-	Name        string
+	PackageName        string
+	ModelPackageName   string
+	ModelPackageImport string
+	Name               string
 }
 
 func GenerateHandlerFile(name string, config *Config) error {
 	tp := strings.Split(config.Handler, "/")
 	mp := strings.Split(config.Model, "/")
-	s := buildHandler(tp[len(tp)-1], mp[len(mp)-1], name)
+	s := buildHandler(&Handler{
+		PackageName:        tp[len(tp)-1],
+		ModelPackageName:   mp[len(mp)-1],
+		Name:               name,
+		ModelPackageImport: config.Module + "/" + config.Model,
+	})
 	mFileName := config.Handler + "/" + strings.ToLower(name) + ".go"
 	f, err := os.OpenFile(mFileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
@@ -33,12 +40,13 @@ func GenerateHandlerFile(name string, config *Config) error {
 	return nil
 }
 
-func buildHandler(packageName, modelPackageName, name string) string {
+func buildHandler(h *Handler) string {
 	s := template.GetHandlerTemplate()
-	s = strings.ReplaceAll(s, "{package}", packageName)
-	s = strings.ReplaceAll(s, "{model_name}", name)
-	nameCamel := strcase.ToCamel(name)
+	s = strings.ReplaceAll(s, "{package}", h.PackageName)
+	s = strings.ReplaceAll(s, "{model_name}", h.Name)
+	nameCamel := strcase.ToCamel(h.Name)
 	s = strings.ReplaceAll(s, "{model_name_camel}", nameCamel)
-	s = strings.ReplaceAll(s, "{model_package}", modelPackageName)
+	s = strings.ReplaceAll(s, "{model_package}", h.ModelPackageName)
+	s = strings.ReplaceAll(s, "{model_package_import}", h.ModelPackageImport)
 	return s
 }

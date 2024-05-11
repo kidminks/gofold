@@ -62,6 +62,8 @@ func GetHandlerTemplate() string {
 		"net/http"
 		"strconv"
 		
+		"github.com/gorilla/mux"
+
 		{model_package_import}
 	)
 

@@ -15,6 +15,7 @@ type Config struct {
 	Model   string   `json:"model"`
 	Handler string   `json:"handler"`
 	Main    string   `json:"main"`
+	Module  string   `json:"module"`
 }
 
 func WriteDefaultConfig(module string, f *os.File) error {
@@ -52,4 +53,23 @@ func FetchConfig(configFile string) (*Config, error) {
 	var result Config
 	json.Unmarshal([]byte(byteValue), &result)
 	return &result, nil
+}
+
+func WriteGoMod(module string, f *os.File) error {
+	goMod := `
+module ` + module + `
+
+go 1.22.0
+	`
+	if _, err := fmt.Fprintln(f, goMod); err != nil {
+		slog.Error("error in writing default json to file", "error", err)
+		return err
+	}
+
+	if err := f.Close(); err != nil {
+		slog.Error("error in closing file", "error", err)
+		return err
+	}
+
+	return nil
 }
