@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/kidminks/gofold/internal"
 	"github.com/spf13/cobra"
 )
 
@@ -34,6 +35,10 @@ var handlerCmd = &cobra.Command{
 		configFile, _ := cmd.Flags().GetString("config")
 		if configFile == "" {
 			slog.Error("config file not specified")
+			os.Exit(1)
+		}
+		hErr := internal.GenerateHandler(args[0], configFile)
+		if hErr == nil {
 			os.Exit(1)
 		}
 	},

@@ -13,6 +13,7 @@ type Config struct {
 	Files   []string `json:"files"`
 	Config  string   `json:"config"`
 	Model   string   `json:"model"`
+	Handler string   `json:"handler"`
 	Main    string   `json:"main"`
 }
 

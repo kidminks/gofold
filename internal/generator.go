@@ -78,3 +78,15 @@ func GenerateModel(name, configFile string, fields []string) error {
 	}
 	return nil
 }
+
+func GenerateHandler(name, configFile string) error {
+	config, err := model.FetchConfig(configFile)
+	if err != nil {
+		return err
+	}
+	hErr := model.GenerateHandlerFile(name, config)
+	if hErr != nil {
+		return hErr
+	}
+	return nil
+}

@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"log/slog"
 	"os"
 	"strings"
@@ -47,7 +46,6 @@ func GenerateModelFile(name string, config *Config, fields []string) error {
 
 func buildModel(packageName, name string, fields []string) string {
 	ff, fs := buildFieldStructure(fields)
-	fmt.Println(ff)
 	s := template.GetModelTemplate()
 	s = strings.ReplaceAll(s, "{package}", packageName)
 	s = strings.ReplaceAll(s, "{model_name}", name)
