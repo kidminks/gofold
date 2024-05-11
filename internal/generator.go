@@ -32,6 +32,9 @@ func GenerateDefaultConfigFile(path, module string) error {
 	if err := GenerateFile(path + DefaultConfigFile); err != nil {
 		return err
 	}
+	if err := GenerateFile(path + DefaultGoModFile); err != nil {
+		return err
+	}
 	f, err := os.OpenFile(path+DefaultConfigFile, os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		slog.Error("error in opening file")
@@ -47,7 +50,7 @@ func GenerateDefaultConfigFile(path, module string) error {
 		return err
 	}
 	defer cf.Close()
-	if err := model.WriteGoMod(module, f); err != nil {
+	if err := model.WriteGoMod(module, cf); err != nil {
 		return err
 	}
 	return nil

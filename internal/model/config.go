@@ -22,12 +22,12 @@ func WriteDefaultConfig(module string, f *os.File) error {
 	configJson := `
 {
 	"folders": ["cmd/server", "internal/model", "internal/handler", "internal/db", "config"],
-	"file": ["cmd/server/main.go", ".gitignore", "go.mod"],
+	"file": ["cmd/server/main.go", ".gitignore"],
 	"config": "config",
 	"model": "internal/model",
 	"handler": "internal/handler",
-	"main": "/cmd/server/main.go"
-	"module": ` + module + `
+	"main": "/cmd/server/main.go",
+	"module": "` + module + `"
 }
 	`
 	if _, err := fmt.Fprintln(f, configJson); err != nil {

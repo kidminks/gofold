@@ -10,14 +10,14 @@ import (
 
 // initCmd represents the init command
 var initCmd = &cobra.Command{
-	Use:   "init [project name]",
+	Use:   "init [project name] [module]",
 	Short: "Generate the base structure of your go project with the given name",
 	Long: `init will create a new folder with project name with 
 the appropriate folders and imports 
 It requires a project name for generation for eg :-
 
 gofold init fastDev`,
-	Args: cobra.ExactArgs(1),
+	Args: cobra.ExactArgs(2),
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		var comps []string
 		if len(args) == 0 {
