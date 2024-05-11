@@ -20,7 +20,7 @@ type Config struct {
 func WriteDefaultConfig(f *os.File) error {
 	configJson := `
 {
-	"folders": ["cmd/server", "internal/model", "internal/db", "config"],
+	"folders": ["cmd/server", "internal/model", "internal/handler", "internal/db", "config"],
 	"file": ["cmd/server/main.go", ".gitignore", "go.mod"],
 	"config": "config",
 	"model": "internal/model",
