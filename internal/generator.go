@@ -102,3 +102,15 @@ func GenerateHandler(name, configFile string) error {
 	}
 	return nil
 }
+
+func GenerateRoute(name, configFile string) error {
+	config, err := model.FetchConfig(configFile)
+	if err != nil {
+		return err
+	}
+	hErr := model.GenerateHandlerFile(name, config)
+	if hErr != nil {
+		return hErr
+	}
+	return nil
+}
