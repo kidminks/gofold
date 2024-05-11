@@ -25,7 +25,7 @@ func GenerateFile(file string) error {
 	return nil
 }
 
-func GenerateDefaultConfigFile(path string) error {
+func GenerateDefaultConfigFile(path, module string) error {
 	if err := GenerateFolder(path); err != nil {
 		return err
 	}
@@ -38,7 +38,7 @@ func GenerateDefaultConfigFile(path string) error {
 		return err
 	}
 	defer f.Close()
-	if err := model.WriteDefaultConfig(f); err != nil {
+	if err := model.WriteDefaultConfig(module, f); err != nil {
 		return err
 	}
 	return nil

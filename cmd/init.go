@@ -38,7 +38,7 @@ gofold init fastDev`,
 		if configFile != "" {
 			internal.GenerateStructureUsingConfigFile(path, configFile, false)
 		} else {
-			internal.GenerateDefaultConfigFile(path)
+			internal.GenerateDefaultConfigFile(path, module)
 			internal.GenerateStructureUsingConfigFile(path, internal.DefaultConfigFile, true)
 		}
 	},
