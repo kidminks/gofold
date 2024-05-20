@@ -122,7 +122,7 @@ func GetHandlerTemplate() string {
 	}`
 }
 
-func GenerateRouteTemplate() string {
+func GetRouteTemplate() string {
 	return `
 package {package}
 
