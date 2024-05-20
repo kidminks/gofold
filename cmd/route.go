@@ -40,7 +40,7 @@ handler will create a new file in folder linked to handler folder
 			slog.Error("config file not specified")
 			os.Exit(1)
 		}
-		hErr := internal.GenerateHandler(args[0], configFile)
+		hErr := internal.GenerateRoute(args[0], configFile)
 		if hErr == nil {
 			os.Exit(1)
 		}

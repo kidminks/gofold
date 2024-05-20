@@ -108,7 +108,7 @@ func GenerateRoute(name, configFile string) error {
 	if err != nil {
 		return err
 	}
-	hErr := model.GenerateHandlerFile(name, config)
+	hErr := model.GenerateRouteFile(name, config)
 	if hErr != nil {
 		return hErr
 	}

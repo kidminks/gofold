@@ -121,3 +121,33 @@ func GetHandlerTemplate() string {
 		return nil
 	}`
 }
+
+func GenerateRouteTemplate() string {
+	return `
+package {package}
+
+func Create{model_name}Route(w http.ResponseWriter, r *http.Request) error {
+	// create db connection
+	// call to handler
+	// reture result in w
+}
+
+func Get{model_name}Route(w http.ResponseWriter, r *http.Request) error {
+	// create db connection
+	// call to handler
+	// reture result in w
+}
+
+func Update{model_name}Route(w http.ResponseWriter, r *http.Request) error {
+	// create db connection
+	// call to handler
+	// reture result in w
+}
+
+func Delete{model_name}Route(w http.ResponseWriter, r *http.Request) error {
+	// create db connection
+	// call to handler
+	// reture result in w
+}
+	`
+}
