@@ -14,6 +14,7 @@ type Config struct {
 	Config  string   `json:"config"`
 	Model   string   `json:"model"`
 	Handler string   `json:"handler"`
+	Route   string   `json:"route"`
 	Main    string   `json:"main"`
 	Module  string   `json:"module"`
 }
@@ -21,11 +22,12 @@ type Config struct {
 func WriteDefaultConfig(module string, f *os.File) error {
 	configJson := `
 {
-	"folders": ["cmd/server", "internal/model", "internal/handler", "internal/db", "config"],
+	"folders": ["cmd/server", "internal/model", "internal/handler", "internal/route", "internal/db", "config"],
 	"file": ["cmd/server/main.go", ".gitignore"],
 	"config": "config",
 	"model": "internal/model",
 	"handler": "internal/handler",
+	"route": "internal/route",
 	"main": "/cmd/server/main.go",
 	"module": "` + module + `"
 }
