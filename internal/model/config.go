@@ -75,3 +75,29 @@ go 1.22.0
 
 	return nil
 }
+
+func WriteMainFile(module string, f *os.File) error {
+	main := `
+package main
+
+import (
+	{route_module_import}
+)
+
+func main() {
+	router.WebServerConf("8080")
+}
+	`
+
+	if _, err := fmt.Fprintln(f, main); err != nil {
+		slog.Error("error in writing default json to file", "error", err)
+		return err
+	}
+
+	if err := f.Close(); err != nil {
+		slog.Error("error in closing file", "error", err)
+		return err
+	}
+
+	return nil
+}
