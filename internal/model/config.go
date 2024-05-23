@@ -81,7 +81,7 @@ func WriteMainFile(module string, f *os.File) error {
 package main
 
 import (
-	{route_module_import}
+	` + `"` + module + `/internal/route"` + `
 )
 
 func main() {
