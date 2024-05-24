@@ -53,6 +53,28 @@ func GenerateDefaultConfigFile(path, module string) error {
 	if err := model.WriteGoMod(module, cf); err != nil {
 		return err
 	}
+	mf, err := os.OpenFile(path+MainGoFile, os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		slog.Error("error in opening file")
+		return err
+	}
+	defer mf.Close()
+	if err := model.WriteMainFile(module, mf); err != nil {
+		return err
+	}
+	return nil
+}
+
+func GenerateDefaultRequiredFile(path, module string) error {
+	mf, err := os.OpenFile(path+MainGoFile, os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		slog.Error("error in opening file")
+		return err
+	}
+	defer mf.Close()
+	if err := model.WriteMainFile(module, mf); err != nil {
+		return err
+	}
 	return nil
 }
 
