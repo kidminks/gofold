@@ -23,7 +23,7 @@ func WriteDefaultConfig(module string, f *os.File) error {
 	configJson := `
 {
 	"folders": ["cmd/server", "internal/model", "internal/handler", "internal/route", "internal/db", "config"],
-	"file": ["cmd/server/main.go", ".gitignore"],
+	"file": ["cmd/server/main.go", ".gitignore", "internal/route/webserver.go"],
 	"config": "config",
 	"model": "internal/model",
 	"handler": "internal/handler",
@@ -81,11 +81,57 @@ func WriteMainFile(module string, f *os.File) error {
 package main
 
 import (
+	"log"
+	"net/http"
+	"github.com/gorilla/mux"
+
 	` + `"` + module + `/internal/route"` + `
 )
 
+// CORS configuration
+func CORS(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Set Headers
+		w.Header().Set("Access-Control-Allow-Headers:", "*")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "*")
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		// Next
+		next.ServeHTTP(w, r)
+		return
+	})
+}
+
+func NewRouter() *mux.Router {
+
+	r := mux.NewRouter()
+
+	// {new_model_routes} do not remove
+ 
+	return r
+}
+
 func main() {
-	router.WebServerConf("8080")
+	r := NewRouter()
+	r.Use(CORS)
+	http.Handle("/", r)
+
+	var transport http.RoundTripper = &http.Transport{
+		DisableKeepAlives: true,
+	}
+	client.Transport = transport
+
+	err := http.ListenAndServe(":8080", nil)
+
+	if err != nil {
+		log.Println("An error occured starting HTTP listener at port " + port)
+		log.Println("Error: " + err.Error())
+	}
 }
 	`
 

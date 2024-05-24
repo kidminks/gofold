@@ -3,5 +3,5 @@ package internal
 const (
 	DefaultConfigFile = "/gofold_config.json"
 	DefaultGoModFile  = "/go.mod"
-	MainGoFile        = "/main.go"
+	MainGoFile        = "/cmd/server/main.go"
 )

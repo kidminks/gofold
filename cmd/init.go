@@ -40,6 +40,7 @@ gofold init fastDev`,
 		} else {
 			internal.GenerateDefaultConfigFile(path, module)
 			internal.GenerateStructureUsingConfigFile(path, internal.DefaultConfigFile, true)
+			internal.GenerateDefaultRequiredFile(path, module)
 		}
 	},
 }
