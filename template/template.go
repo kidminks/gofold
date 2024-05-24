@@ -126,6 +126,10 @@ func GetRouteTemplate() string {
 	return `
 package {package}
 
+import (
+	"{route_package_import}"
+)
+
 func Create{model_name}Route(w http.ResponseWriter, r *http.Request) error {
 	// create db connection
 	// call to handler

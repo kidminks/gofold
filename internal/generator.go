@@ -75,6 +75,16 @@ func GenerateDefaultRequiredFile(path, module string) error {
 	if err := model.WriteMainFile(module, mf); err != nil {
 		return err
 	}
+
+	df, err := os.OpenFile(path+DbGoFile, os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		slog.Error("error in opening file")
+		return err
+	}
+	defer df.Close()
+	if err := model.WriteDbFile(module, df); err != nil {
+		return err
+	}
 	return nil
 }
 
