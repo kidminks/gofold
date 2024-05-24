@@ -23,12 +23,13 @@ func WriteDefaultConfig(module string, f *os.File) error {
 	configJson := `
 {
 	"folders": ["cmd/server", "internal/model", "internal/handler", "internal/route", "internal/db", "config"],
-	"file": ["cmd/server/main.go", ".gitignore", "internal/route/webserver.go"],
+	"file": ["cmd/server/main.go", "internal/db/db.go", ".gitignore"],
 	"config": "config",
 	"model": "internal/model",
 	"handler": "internal/handler",
 	"route": "internal/route",
 	"main": "/cmd/server/main.go",
+	"db": "internal/db/db.go",
 	"module": "` + module + `"
 }
 	`
@@ -85,6 +86,7 @@ import (
 	"net/http"
 	"github.com/gorilla/mux"
 
+	` + `"` + module + `/internal/db"` + `
 	` + `"` + module + `/internal/route"` + `
 )
 
@@ -117,6 +119,9 @@ func NewRouter() *mux.Router {
 }
 
 func main() {
+	// init database connection
+	db.InitDb(DBConfig{})
+
 	r := NewRouter()
 	r.Use(CORS)
 	http.Handle("/", r)
@@ -136,6 +141,48 @@ func main() {
 	`
 
 	if _, err := fmt.Fprintln(f, main); err != nil {
+		slog.Error("error in writing default json to file", "error", err)
+		return err
+	}
+
+	if err := f.Close(); err != nil {
+		slog.Error("error in closing file", "error", err)
+		return err
+	}
+
+	return nil
+}
+
+func WriteDbFile(module string, f *os.File) error {
+	db := `
+package db
+
+import (
+	"database/sql"
+)
+
+type DBConfig struct {
+	Host     string
+	Port     string
+	Username string
+	Password string
+	Database string
+}	
+
+var Db *sql.DB
+
+func InitDb(config DBConfig) error {
+	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", config.GetUsername(), config.GetPassword(), config.GetHost(), config.GetPort(), config.GetDatabase())
+	db, err := sql.Open("mysql", connectionString)
+	if err != nil {
+		return err
+	}
+	Db = db
+	return nil
+}	
+	`
+
+	if _, err := fmt.Fprintln(f, db); err != nil {
 		slog.Error("error in writing default json to file", "error", err)
 		return err
 	}
