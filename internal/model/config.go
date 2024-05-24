@@ -23,7 +23,7 @@ func WriteDefaultConfig(module string, f *os.File) error {
 	configJson := `
 {
 	"folders": ["cmd/server", "internal/model", "internal/handler", "internal/route", "internal/db", "config"],
-	"file": ["cmd/server/main.go", ".gitignore", "internal/route/webserver.go"],
+	"files": ["cmd/server/main.go", ".gitignore"],
 	"config": "config",
 	"model": "internal/model",
 	"handler": "internal/handler",

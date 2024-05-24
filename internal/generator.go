@@ -21,7 +21,7 @@ func GenerateFile(file string) error {
 	if _, err := os.Create(file); err != nil {
 		return err
 	}
-	slog.Info("creating folder ", "path", file, "status", "completed")
+	slog.Info("creating file ", "path", file, "status", "completed")
 	return nil
 }
 
@@ -53,15 +53,6 @@ func GenerateDefaultConfigFile(path, module string) error {
 	if err := model.WriteGoMod(module, cf); err != nil {
 		return err
 	}
-	mf, err := os.OpenFile(path+MainGoFile, os.O_APPEND|os.O_WRONLY, 0644)
-	if err != nil {
-		slog.Error("error in opening file")
-		return err
-	}
-	defer mf.Close()
-	if err := model.WriteMainFile(module, mf); err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -80,7 +71,7 @@ func GenerateDefaultRequiredFile(path, module string) error {
 
 func GenerateStructureUsingConfigFile(path, configFile string, addPath bool) error {
 	if addPath {
-		configFile = path + "/" + configFile
+		configFile = path + configFile
 	}
 	config, err := model.FetchConfig(configFile)
 	if err != nil {
