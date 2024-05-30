@@ -10,8 +10,10 @@ import (
 
 func WriteMainFile(module string, f *os.File) error {
 	main := template.GetMainTemplate()
-
-	if _, err := fmt.Fprintln(f, main); err != nil {
+	main.Module = module
+	main.CreateValueMap()
+	main.Replace()
+	if _, err := fmt.Fprintln(f, main.Output); err != nil {
 		slog.Error("error in writing default json to file", "error", err)
 		return err
 	}

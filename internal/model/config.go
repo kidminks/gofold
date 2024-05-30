@@ -25,6 +25,8 @@ type Config struct {
 func WriteDefaultConfig(module string, f *os.File) error {
 	configMap := template.GetDefaultConfigTemplate()
 	configMap.Module = module
+	configMap.CreateValueMap()
+	configMap.Replace()
 	if _, err := fmt.Fprintln(f, configMap.Output); err != nil {
 		slog.Error("error in writing default json to file", "error", err)
 		return err

@@ -19,16 +19,19 @@ func GetDefaultConfigTemplate() *ReplaceMap {
 	}
 }
 
-func GetGoModTemplate() string {
-	return `
+func GetGoModTemplate() *ReplaceMap {
+	data := `
 	module {module}
 
 	go 1.22.0	
 	`
+	return &ReplaceMap{
+		Input: data,
+	}
 }
 
-func GetDbTemplate() string {
-	return `
+func GetDbTemplate() *ReplaceMap {
+	data := `
 	package db
 
 	import (
@@ -55,10 +58,13 @@ func GetDbTemplate() string {
 		return nil
 	}	
 	`
+	return &ReplaceMap{
+		Input: data,
+	}
 }
 
-func GetMainTemplate() string {
-	return `
+func GetMainTemplate() *ReplaceMap {
+	data := `
 	package main
 	
 	import (
@@ -119,6 +125,9 @@ func GetMainTemplate() string {
 		}
 	}
 		`
+	return &ReplaceMap{
+		Input: data,
+	}
 }
 
 func GetModelTemplate() string {

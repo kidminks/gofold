@@ -10,7 +10,9 @@ import (
 
 func WriteDbFile(module string, f *os.File) error {
 	db := template.GetDbTemplate()
-	if _, err := fmt.Fprintln(f, db); err != nil {
+	db.CreateValueMap()
+	db.Replace()
+	if _, err := fmt.Fprintln(f, db.Output); err != nil {
 		slog.Error("error in writing default json to file", "error", err)
 		return err
 	}

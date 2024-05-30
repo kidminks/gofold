@@ -10,7 +10,10 @@ import (
 
 func WriteGoMod(module string, f *os.File) error {
 	goMod := template.GetGoModTemplate()
-	if _, err := fmt.Fprintln(f, goMod); err != nil {
+	goMod.Module = module
+	goMod.CreateValueMap()
+	goMod.Replace()
+	if _, err := fmt.Fprintln(f, goMod.Output); err != nil {
 		slog.Error("error in writing default json to file", "error", err)
 		return err
 	}
