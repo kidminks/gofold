@@ -1,7 +1,7 @@
 package template
 
-func GetDefaultConfigTemplate() string {
-	return `
+func GetDefaultConfigTemplate() *ReplaceMap {
+	data := `
 {
 	"folders": ["cmd/server", "internal/model", "internal/handler", "internal/route", "internal/db", "config"],
 	"files": ["cmd/server/main.go", "internal/db/db.go", ".gitignore"],
@@ -14,6 +14,9 @@ func GetDefaultConfigTemplate() string {
 	"module": "{module}"
 }	
 	`
+	return &ReplaceMap{
+		Input: data,
+	}
 }
 
 func GetGoModTemplate() string {

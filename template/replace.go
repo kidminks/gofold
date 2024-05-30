@@ -4,6 +4,8 @@ import "strings"
 
 type ReplaceMap struct {
 	Module   string
+	Input    string
+	Output   string
 	ValueMap map[string]string
 }
 
@@ -14,10 +16,10 @@ func (r *ReplaceMap) CreateValueMap() {
 	}
 }
 
-func (r *ReplaceMap) Replace(input string) string {
-	output := input
+func (r *ReplaceMap) Replace() {
+	output := r.Input
 	for k, v := range r.ValueMap {
 		output = strings.ReplaceAll(output, k, v)
 	}
-	return output
+	r.Output = output
 }
