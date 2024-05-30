@@ -25,7 +25,9 @@ func GenerateFile(file string) error {
 	return nil
 }
 
-func GenerateDefaultConfigFile(path, module string) error {
+// Generating config file to be used later on
+// Generating default go mod file
+func GenerateDefaultStartingFile(path, module string) error {
 	if err := GenerateFolder(path); err != nil {
 		return err
 	}

@@ -1,5 +1,135 @@
 package template
 
+func GetDefaultConfigTemplate() *ReplaceMap {
+	data := `
+{
+	"folders": ["cmd/server", "internal/model", "internal/handler", "internal/route", "internal/db", "config"],
+	"files": ["cmd/server/main.go", "internal/db/db.go", ".gitignore"],
+	"config": "config",
+	"model": "internal/model",
+	"handler": "internal/handler",
+	"route": "internal/route",
+	"main": "/cmd/server/main.go",
+	"db": "/internal/db/db.go",
+	"module": "{module}"
+}	
+	`
+	return &ReplaceMap{
+		Input: data,
+	}
+}
+
+func GetGoModTemplate() *ReplaceMap {
+	data := `
+	module {module}
+
+	go 1.22.0	
+	`
+	return &ReplaceMap{
+		Input: data,
+	}
+}
+
+func GetDbTemplate() *ReplaceMap {
+	data := `
+	package db
+
+	import (
+		"database/sql"
+	)
+
+	type DBConfig struct {
+		Host     string
+		Port     string
+		Username string
+		Password string
+		Database string
+	}	
+
+	var Db *sql.DB
+
+	func InitDb(config DBConfig) error {
+		connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", config.GetUsername(), config.GetPassword(), config.GetHost(), config.GetPort(), config.GetDatabase())
+		db, err := sql.Open("mysql", connectionString)
+		if err != nil {
+			return err
+		}
+		Db = db
+		return nil
+	}	
+	`
+	return &ReplaceMap{
+		Input: data,
+	}
+}
+
+func GetMainTemplate() *ReplaceMap {
+	data := `
+	package main
+	
+	import (
+		"log"
+		"net/http"
+		"github.com/gorilla/mux"
+	
+		"{module}/internal/db"
+		"{module}/internal/route"
+	)
+	
+	// CORS configuration
+	func CORS(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			// Set Headers
+			w.Header().Set("Access-Control-Allow-Headers:", "*")
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Methods", "*")
+	
+			if r.Method == "OPTIONS" {
+				w.WriteHeader(http.StatusOK)
+				return
+			}
+	
+			// Next
+			next.ServeHTTP(w, r)
+			return
+		})
+	}
+	
+	func NewRouter() *mux.Router {
+	
+		r := mux.NewRouter()
+	
+		// {new_model_routes} do not remove
+	 
+		return r
+	}
+	
+	func main() {
+		// init database connection
+		db.InitDb(DBConfig{})
+	
+		r := NewRouter()
+		r.Use(CORS)
+		http.Handle("/", r)
+	
+		var transport http.RoundTripper = &http.Transport{
+			DisableKeepAlives: true,
+		}
+		client.Transport = transport
+	
+		err := http.ListenAndServe(":8080", nil)
+	
+		if err != nil {
+			log.Println("An error occured starting HTTP listener at port " + port)
+			log.Println("Error: " + err.Error())
+		}
+	}
+		`
+	return &ReplaceMap{
+		Input: data,
+	}
+}
+
 func GetModelTemplate() string {
 	return `package {package}
 
@@ -124,34 +254,34 @@ func GetHandlerTemplate() string {
 
 func GetRouteTemplate() string {
 	return `
-package {package}
+	package {package}
 
-import (
-	"{route_package_import}"
-)
+	import (
+		"{route_package_import}"
+	)
 
-func Create{model_name}Route(w http.ResponseWriter, r *http.Request) error {
-	// create db connection
-	// call to handler
-	// reture result in w
-}
+	func Create{model_name}Route(w http.ResponseWriter, r *http.Request) error {
+		// create db connection
+		// call to handler
+		// reture result in w
+	}
 
-func Get{model_name}Route(w http.ResponseWriter, r *http.Request) error {
-	// create db connection
-	// call to handler
-	// reture result in w
-}
+	func Get{model_name}Route(w http.ResponseWriter, r *http.Request) error {
+		// create db connection
+		// call to handler
+		// reture result in w
+	}
 
-func Update{model_name}Route(w http.ResponseWriter, r *http.Request) error {
-	// create db connection
-	// call to handler
-	// reture result in w
-}
+	func Update{model_name}Route(w http.ResponseWriter, r *http.Request) error {
+		// create db connection
+		// call to handler
+		// reture result in w
+	}
 
-func Delete{model_name}Route(w http.ResponseWriter, r *http.Request) error {
-	// create db connection
-	// call to handler
-	// reture result in w
-}
+	func Delete{model_name}Route(w http.ResponseWriter, r *http.Request) error {
+		// create db connection
+		// call to handler
+		// reture result in w
+	}
 	`
 }
