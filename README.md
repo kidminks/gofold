@@ -1,6 +1,7 @@
 # gofold
 CLI which quickly set up the basic layout and files for a new project i.e go scaffolding
 
+```
 Usage:
   gofold [command]
 
@@ -18,3 +19,4 @@ Flags:
   -t, --toggle          Help message for toggle
 
 Use "gofold [command] --help" for more information about a command.
+```
